@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
-import smokeBg from "@/assets/smoke-bg.jpg";
+import luxuryBg from "@/assets/luxury-bg.jpg";
 
 const faqs = [
   {
@@ -32,24 +32,27 @@ const faqs = [
 
 const guidelines = [
   {
-    number: "01",
+    number: "I",
     title: "Código de Vestimenta",
+    subtitle: "Elegancia Discreta",
     description:
-      "Elegancia discreta. Sugerimos vestimenta formal o smart casual que complemente la atmósfera del espacio. Evite prendas deportivas o calzado informal.",
+      "Sugerimos vestimenta formal o smart casual que complemente la atmósfera del espacio. Evite prendas deportivas o calzado informal.",
   },
   {
-    number: "02",
+    number: "II",
     title: "Viva el Momento",
+    subtitle: "Desconéctese para Conectar",
     description:
       "Le invitamos a silenciar su dispositivo durante la experiencia. Cada detalle fue diseñado para ser apreciado con todos los sentidos.",
   },
   {
-    number: "03",
+    number: "III",
     title: "Su Opinión Importa",
+    subtitle: "Comparta la Experiencia",
     description:
       "Si nuestra experiencia dejó huella en usted, una breve reseña nos ayuda a seguir creando momentos únicos.",
     cta: {
-      label: "Compartir Experiencia →",
+      label: "Dejar Reseña",
       url: "https://search.google.com/local/writereview?placeid=YOUR_PLACE_ID",
     },
   },
@@ -59,49 +62,69 @@ const FAQ = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <div className="min-h-screen bg-background text-foreground relative overflow-hidden">
-      {/* Background */}
+    <div className="min-h-screen bg-background text-foreground relative overflow-hidden font-heading">
+      {/* Background Image */}
       <div className="fixed inset-0 z-0">
         <img
-          src={smokeBg}
+          src={luxuryBg}
           alt=""
-          className="w-full h-full object-cover opacity-20"
+          className="w-full h-full object-cover opacity-25"
           width={1920}
           height={1080}
         />
-        <div className="absolute inset-0 bg-background/80" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background via-background/85 to-background" />
       </div>
 
       {/* Content */}
-      <main className="relative z-10 flex flex-col items-center px-6 py-24 md:py-32 max-w-3xl mx-auto">
+      <main className="relative z-10 flex flex-col items-center px-6 sm:px-10 max-w-4xl mx-auto">
 
-        {/* Header */}
-        <header className="text-center mb-24">
-          <p className="text-[10px] tracking-[0.6em] uppercase text-muted-foreground mb-8">
-            Rivalo Macasé
-          </p>
-          <h1 className="text-4xl md:text-6xl font-extralight tracking-[0.2em] text-foreground leading-tight">
+        {/* Hero */}
+        <header className="text-center pt-28 pb-32 md:pt-36 md:pb-40 animate-fade-in">
+          <div className="flex items-center justify-center gap-6 mb-10">
+            <span className="w-16 h-px bg-primary/30" />
+            <p className="text-[11px] tracking-[0.7em] uppercase text-primary/70">
+              Rivalo Macasé
+            </p>
+            <span className="w-16 h-px bg-primary/30" />
+          </div>
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-light italic tracking-[0.05em] text-foreground leading-[1.1]">
             La Experiencia
           </h1>
+          <p className="mt-8 text-sm md:text-base font-light tracking-[0.15em] text-muted-foreground max-w-md mx-auto leading-relaxed">
+            Donde cada detalle cuenta y cada momento es irrepetible
+          </p>
         </header>
 
         {/* Guidelines */}
-        <section className="w-full mb-28">
-          <p className="text-[10px] tracking-[0.5em] uppercase text-muted-foreground text-center mb-16">
-            Antes de su Visita
-          </p>
+        <section className="w-full mb-32 animate-fade-in-delay-1">
+          <div className="text-center mb-20">
+            <p className="text-[10px] tracking-[0.6em] uppercase text-primary/50 mb-3">
+              Nuestro Protocolo
+            </p>
+            <p className="text-2xl md:text-3xl font-light italic text-foreground tracking-wide">
+              Antes de su Visita
+            </p>
+          </div>
 
-          <div className="grid gap-16 md:gap-20">
+          <div className="grid gap-0">
             {guidelines.map((item, index) => (
-              <div key={index} className="flex gap-8">
-                <span className="text-[10px] tracking-[0.3em] text-muted-foreground/40 pt-1 font-light">
-                  {item.number}
-                </span>
-                <div className="flex-1 border-t border-border/50 pt-6">
-                  <h3 className="text-base md:text-lg font-extralight tracking-[0.1em] text-foreground mb-4">
+              <div
+                key={index}
+                className="group grid grid-cols-[60px_1fr] md:grid-cols-[80px_1fr] gap-4 md:gap-8 py-10 border-t border-primary/10 last:border-b last:border-primary/10"
+              >
+                <div className="flex justify-end pt-1">
+                  <span className="text-2xl md:text-3xl font-light italic text-primary/20 group-hover:text-primary/40 transition-colors duration-700">
+                    {item.number}
+                  </span>
+                </div>
+                <div>
+                  <p className="text-[10px] tracking-[0.4em] uppercase text-primary/40 mb-2">
+                    {item.subtitle}
+                  </p>
+                  <h3 className="text-xl md:text-2xl font-light italic text-foreground mb-4 tracking-wide">
                     {item.title}
                   </h3>
-                  <p className="text-sm font-light leading-[1.8] text-muted-foreground max-w-lg">
+                  <p className="text-sm md:text-base font-light leading-[2] text-muted-foreground max-w-xl">
                     {item.description}
                   </p>
                   {item.cta && (
@@ -109,9 +132,10 @@ const FAQ = () => {
                       href={item.cta.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-block mt-6 text-[10px] tracking-[0.4em] uppercase text-muted-foreground hover:text-foreground transition-colors duration-700"
+                      className="inline-flex items-center gap-3 mt-6 px-6 py-2.5 border border-primary/20 text-[10px] tracking-[0.4em] uppercase text-primary/60 hover:text-primary hover:border-primary/40 transition-all duration-700 rounded-none"
                     >
                       {item.cta.label}
+                      <span className="text-xs">→</span>
                     </a>
                   )}
                 </div>
@@ -120,39 +144,48 @@ const FAQ = () => {
           </div>
         </section>
 
-        {/* Divider */}
-        <div className="w-8 h-px bg-border/50 mb-28" />
+        {/* Ornamental divider */}
+        <div className="flex items-center gap-4 mb-32 animate-fade-in-delay-2">
+          <span className="w-8 h-px bg-primary/15" />
+          <span className="text-primary/20 text-lg">✦</span>
+          <span className="w-8 h-px bg-primary/15" />
+        </div>
 
-        {/* FAQ */}
-        <section className="w-full">
-          <p className="text-[10px] tracking-[0.5em] uppercase text-muted-foreground text-center mb-16">
-            Preguntas Frecuentes
-          </p>
+        {/* FAQ Section */}
+        <section className="w-full mb-32 animate-fade-in-delay-3">
+          <div className="text-center mb-20">
+            <p className="text-[10px] tracking-[0.6em] uppercase text-primary/50 mb-3">
+              Información
+            </p>
+            <p className="text-2xl md:text-3xl font-light italic text-foreground tracking-wide">
+              Preguntas Frecuentes
+            </p>
+          </div>
 
           <div>
             {faqs.map((faq, index) => {
               const isOpen = openIndex === index;
               return (
-                <div key={index} className="border-t border-border/40 last:border-b last:border-border/40">
+                <div key={index} className="border-t border-primary/10 last:border-b last:border-primary/10">
                   <button
                     onClick={() => setOpenIndex(isOpen ? null : index)}
-                    className="w-full flex items-center justify-between py-7 text-left group"
+                    className="w-full flex items-center justify-between py-8 text-left group"
                   >
-                    <span className="text-sm font-light tracking-wide text-muted-foreground group-hover:text-foreground transition-colors duration-700">
+                    <span className="text-base md:text-lg font-light italic tracking-wide text-muted-foreground group-hover:text-foreground transition-colors duration-700">
                       {faq.question}
                     </span>
                     <ChevronDown
-                      className={`w-3.5 h-3.5 text-muted-foreground/50 transition-transform duration-700 flex-shrink-0 ml-6 ${
+                      className={`w-4 h-4 text-primary/30 transition-transform duration-700 flex-shrink-0 ml-8 ${
                         isOpen ? "rotate-180" : ""
                       }`}
                     />
                   </button>
                   <div
                     className={`overflow-hidden transition-all duration-700 ease-in-out ${
-                      isOpen ? "max-h-48 pb-7" : "max-h-0"
+                      isOpen ? "max-h-48 pb-8" : "max-h-0"
                     }`}
                   >
-                    <p className="text-sm font-light leading-[1.9] text-muted-foreground/70 pl-0 pr-12">
+                    <p className="text-sm md:text-base font-light leading-[2] text-muted-foreground/70 pl-0 pr-12">
                       {faq.answer}
                     </p>
                   </div>
@@ -164,9 +197,14 @@ const FAQ = () => {
       </main>
 
       {/* Footer */}
-      <footer className="relative z-10 text-center py-12">
-        <p className="text-[10px] tracking-[0.3em] text-muted-foreground/40">
-          © 2025 Rivalo Macasé
+      <footer className="relative z-10 text-center py-16">
+        <div className="flex items-center justify-center gap-4 mb-4">
+          <span className="w-8 h-px bg-primary/10" />
+          <span className="text-primary/15 text-xs">✦</span>
+          <span className="w-8 h-px bg-primary/10" />
+        </div>
+        <p className="text-[10px] tracking-[0.4em] text-muted-foreground/30 italic">
+          © 2025 Rivalo Macasé — Todos los derechos reservados
         </p>
       </footer>
     </div>
