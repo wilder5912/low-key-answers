@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronDown, Shirt, Smartphone, Star } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import smokeBg from "@/assets/smoke-bg.jpg";
 
 const faqs = [
@@ -32,24 +32,24 @@ const faqs = [
 
 const guidelines = [
   {
-    icon: Shirt,
+    number: "01",
     title: "Código de Vestimenta",
     description:
-      "Vestimenta formal o smart casual. Sugerimos prendas elegantes que reflejen la exclusividad de la experiencia. No se permiten prendas deportivas ni calzado informal.",
+      "Elegancia discreta. Sugerimos vestimenta formal o smart casual que complemente la atmósfera del espacio. Evite prendas deportivas o calzado informal.",
   },
   {
-    icon: Smartphone,
-    title: "Desconéctese para Conectar",
+    number: "02",
+    title: "Viva el Momento",
     description:
-      "Le invitamos a silenciar su dispositivo móvil durante su experiencia. Cada detalle ha sido diseñado para ser vivido con todos los sentidos — permítase disfrutarlo plenamente.",
+      "Le invitamos a silenciar su dispositivo durante la experiencia. Cada detalle fue diseñado para ser apreciado con todos los sentidos.",
   },
   {
-    icon: Star,
-    title: "Comparta su Experiencia",
+    number: "03",
+    title: "Su Opinión Importa",
     description:
-      "Si nuestra experiencia dejó una impresión en usted, nos encantaría conocer su opinión. Su reseña nos ayuda a seguir creando momentos memorables.",
+      "Si nuestra experiencia dejó huella en usted, una breve reseña nos ayuda a seguir creando momentos únicos.",
     cta: {
-      label: "Dejar una Reseña",
+      label: "Compartir Experiencia →",
       url: "https://search.google.com/local/writereview?placeid=YOUR_PLACE_ID",
     },
   },
@@ -60,103 +60,99 @@ const FAQ = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground relative overflow-hidden">
-      {/* Background smoke image */}
+      {/* Background */}
       <div className="fixed inset-0 z-0">
         <img
           src={smokeBg}
           alt=""
-          className="w-full h-full object-cover opacity-30"
+          className="w-full h-full object-cover opacity-20"
           width={1920}
           height={1080}
         />
-        <div className="absolute inset-0 bg-background/70" />
+        <div className="absolute inset-0 bg-background/80" />
       </div>
 
       {/* Content */}
-      <main className="relative z-10 flex flex-col items-center px-6 py-20 md:py-28">
-        {/* Header */}
-        <p className="text-xs tracking-[0.5em] uppercase text-muted-foreground mb-4">
-          Rivalo Macasé
-        </p>
-        <h1 className="text-3xl md:text-5xl font-extralight tracking-[0.15em] text-foreground mb-6">
-          La Experiencia
-        </h1>
-        <div className="w-12 h-px bg-border mb-16" />
+      <main className="relative z-10 flex flex-col items-center px-6 py-24 md:py-32 max-w-3xl mx-auto">
 
-        {/* Guidelines Section */}
-        <section className="w-full max-w-2xl mb-20">
-          <p className="text-xs tracking-[0.4em] uppercase text-muted-foreground text-center mb-12">
-            Para una Experiencia Excepcional
+        {/* Header */}
+        <header className="text-center mb-24">
+          <p className="text-[10px] tracking-[0.6em] uppercase text-muted-foreground mb-8">
+            Rivalo Macasé
+          </p>
+          <h1 className="text-4xl md:text-6xl font-extralight tracking-[0.2em] text-foreground leading-tight">
+            La Experiencia
+          </h1>
+        </header>
+
+        {/* Guidelines */}
+        <section className="w-full mb-28">
+          <p className="text-[10px] tracking-[0.5em] uppercase text-muted-foreground text-center mb-16">
+            Antes de su Visita
           </p>
 
-          <div className="space-y-10">
-            {guidelines.map((item, index) => {
-              const Icon = item.icon;
-              return (
-                <div
-                  key={index}
-                  className="flex gap-6 items-start group"
-                >
-                  <div className="flex-shrink-0 w-10 h-10 rounded-full border border-border flex items-center justify-center group-hover:border-muted-foreground transition-colors duration-500">
-                    <Icon className="w-4 h-4 text-muted-foreground" />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-sm font-light tracking-[0.15em] text-foreground mb-2">
-                      {item.title}
-                    </h3>
-                    <p className="text-sm font-light leading-relaxed text-muted-foreground">
-                      {item.description}
-                    </p>
-                    {item.cta && (
-                      <a
-                        href={item.cta.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-block mt-4 text-xs tracking-[0.3em] uppercase text-muted-foreground border-b border-border pb-1 hover:text-foreground hover:border-muted-foreground transition-all duration-500"
-                      >
-                        {item.cta.label}
-                      </a>
-                    )}
-                  </div>
+          <div className="grid gap-16 md:gap-20">
+            {guidelines.map((item, index) => (
+              <div key={index} className="flex gap-8">
+                <span className="text-[10px] tracking-[0.3em] text-muted-foreground/40 pt-1 font-light">
+                  {item.number}
+                </span>
+                <div className="flex-1 border-t border-border/50 pt-6">
+                  <h3 className="text-base md:text-lg font-extralight tracking-[0.1em] text-foreground mb-4">
+                    {item.title}
+                  </h3>
+                  <p className="text-sm font-light leading-[1.8] text-muted-foreground max-w-lg">
+                    {item.description}
+                  </p>
+                  {item.cta && (
+                    <a
+                      href={item.cta.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block mt-6 text-[10px] tracking-[0.4em] uppercase text-muted-foreground hover:text-foreground transition-colors duration-700"
+                    >
+                      {item.cta.label}
+                    </a>
+                  )}
                 </div>
-              );
-            })}
+              </div>
+            ))}
           </div>
         </section>
 
         {/* Divider */}
-        <div className="w-12 h-px bg-border mb-16" />
+        <div className="w-8 h-px bg-border/50 mb-28" />
 
-        {/* FAQ Section */}
-        <section className="w-full max-w-2xl">
-          <p className="text-xs tracking-[0.4em] uppercase text-muted-foreground text-center mb-12">
+        {/* FAQ */}
+        <section className="w-full">
+          <p className="text-[10px] tracking-[0.5em] uppercase text-muted-foreground text-center mb-16">
             Preguntas Frecuentes
           </p>
 
-          <div className="space-y-0">
+          <div>
             {faqs.map((faq, index) => {
               const isOpen = openIndex === index;
               return (
-                <div key={index} className="border-b border-border">
+                <div key={index} className="border-t border-border/40 last:border-b last:border-border/40">
                   <button
                     onClick={() => setOpenIndex(isOpen ? null : index)}
-                    className="w-full flex items-center justify-between py-6 text-left group"
+                    className="w-full flex items-center justify-between py-7 text-left group"
                   >
-                    <span className="text-sm md:text-base font-light tracking-wide text-secondary-foreground group-hover:text-foreground transition-colors duration-500">
+                    <span className="text-sm font-light tracking-wide text-muted-foreground group-hover:text-foreground transition-colors duration-700">
                       {faq.question}
                     </span>
                     <ChevronDown
-                      className={`w-4 h-4 text-muted-foreground transition-transform duration-500 flex-shrink-0 ml-4 ${
+                      className={`w-3.5 h-3.5 text-muted-foreground/50 transition-transform duration-700 flex-shrink-0 ml-6 ${
                         isOpen ? "rotate-180" : ""
                       }`}
                     />
                   </button>
                   <div
-                    className={`overflow-hidden transition-all duration-500 ease-in-out ${
-                      isOpen ? "max-h-48 pb-6" : "max-h-0"
+                    className={`overflow-hidden transition-all duration-700 ease-in-out ${
+                      isOpen ? "max-h-48 pb-7" : "max-h-0"
                     }`}
                   >
-                    <p className="text-sm font-light leading-relaxed text-muted-foreground pr-8">
+                    <p className="text-sm font-light leading-[1.9] text-muted-foreground/70 pl-0 pr-12">
                       {faq.answer}
                     </p>
                   </div>
@@ -168,9 +164,9 @@ const FAQ = () => {
       </main>
 
       {/* Footer */}
-      <footer className="relative z-10 text-center py-8">
-        <p className="text-xs tracking-[0.2em] text-muted-foreground">
-          © 2025 — Todos los derechos reservados
+      <footer className="relative z-10 text-center py-12">
+        <p className="text-[10px] tracking-[0.3em] text-muted-foreground/40">
+          © 2025 Rivalo Macasé
         </p>
       </footer>
     </div>
