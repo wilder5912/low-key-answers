@@ -1,6 +1,10 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import luxuryBg from "@/assets/luxury-bg.jpg";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const faqs = [
   {
@@ -60,48 +64,154 @@ const guidelines = [
 
 const FAQ = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const heroRef = useRef<HTMLElement>(null);
+  const guidelinesRef = useRef<HTMLElement>(null);
+  const faqRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Hero entrance
+      const heroTl = gsap.timeline({ defaults: { ease: "power3.out" } });
+      heroTl
+        .from(".hero-line", {
+          scaleX: 0,
+          duration: 1.4,
+          transformOrigin: "center",
+        })
+        .from(
+          ".hero-eyebrow",
+          { opacity: 0, y: 10, duration: 1 },
+          "-=1"
+        )
+        .from(
+          ".hero-title",
+          {
+            opacity: 0,
+            y: 40,
+            duration: 1.6,
+            ease: "expo.out",
+          },
+          "-=0.7"
+        )
+        .from(
+          ".hero-sub",
+          { opacity: 0, y: 20, duration: 1.2 },
+          "-=1"
+        );
+
+      // Guidelines reveal
+      gsap.utils.toArray<HTMLElement>(".guideline-item").forEach((el) => {
+        gsap.from(el, {
+          opacity: 0,
+          y: 50,
+          duration: 1.2,
+          ease: "expo.out",
+          scrollTrigger: {
+            trigger: el,
+            start: "top 85%",
+            toggleActions: "play none none none",
+          },
+        });
+      });
+
+      // Section headers
+      gsap.utils.toArray<HTMLElement>(".section-header").forEach((el) => {
+        gsap.from(el.children, {
+          opacity: 0,
+          y: 24,
+          duration: 1.2,
+          stagger: 0.15,
+          ease: "expo.out",
+          scrollTrigger: {
+            trigger: el,
+            start: "top 80%",
+          },
+        });
+      });
+
+      // FAQ items
+      gsap.utils.toArray<HTMLElement>(".faq-item").forEach((el, i) => {
+        gsap.from(el, {
+          opacity: 0,
+          y: 24,
+          duration: 0.9,
+          delay: i * 0.05,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: el,
+            start: "top 88%",
+          },
+        });
+      });
+
+      // Parallax background
+      gsap.to(".bg-parallax", {
+        yPercent: 15,
+        ease: "none",
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
+        },
+      });
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  const toggleFaq = (index: number) => {
+    const isOpen = openIndex === index;
+    setOpenIndex(isOpen ? null : index);
+  };
 
   return (
-    <div className="min-h-screen bg-background text-foreground relative overflow-hidden font-heading">
+    <div
+      ref={containerRef}
+      className="min-h-screen bg-background text-foreground relative overflow-hidden font-heading"
+    >
       {/* Background Image */}
-      <div className="fixed inset-0 z-0">
+      <div className="fixed inset-0 z-0 bg-parallax">
         <img
           src={luxuryBg}
           alt=""
-          className="w-full h-full object-cover opacity-25"
+          className="w-full h-full object-cover opacity-30"
           width={1920}
           height={1080}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-background/85 to-background" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/80 to-background" />
       </div>
 
       {/* Content */}
       <main className="relative z-10 flex flex-col items-center px-6 sm:px-10 max-w-4xl mx-auto">
-
         {/* Hero */}
-        <header className="text-center pt-28 pb-32 md:pt-36 md:pb-40 animate-fade-in">
+        <header
+          ref={heroRef}
+          className="text-center pt-28 pb-32 md:pt-36 md:pb-40"
+        >
           <div className="flex items-center justify-center gap-6 mb-10">
-            <span className="w-16 h-px bg-primary/30" />
-            <p className="text-[11px] tracking-[0.7em] uppercase text-primary/70">
+            <span className="hero-line w-16 h-px bg-primary/50" />
+            <p className="hero-eyebrow text-xs tracking-[0.7em] uppercase text-primary font-normal">
               Rivalo Macasé
             </p>
-            <span className="w-16 h-px bg-primary/30" />
+            <span className="hero-line w-16 h-px bg-primary/50" />
           </div>
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-light italic tracking-[0.05em] text-foreground leading-[1.1]">
+          <h1 className="hero-title text-5xl md:text-7xl lg:text-8xl font-light italic tracking-[0.02em] text-foreground leading-[1.1]">
             La Experiencia
           </h1>
-          <p className="mt-8 text-sm md:text-base font-light tracking-[0.15em] text-muted-foreground max-w-md mx-auto leading-relaxed">
+          <p className="hero-sub mt-8 text-base md:text-lg font-normal tracking-[0.08em] text-foreground/80 max-w-md mx-auto leading-relaxed">
             Donde cada detalle cuenta y cada momento es irrepetible
           </p>
         </header>
 
         {/* Guidelines */}
-        <section className="w-full mb-32 animate-fade-in-delay-1">
-          <div className="text-center mb-20">
-            <p className="text-[10px] tracking-[0.6em] uppercase text-primary/50 mb-3">
+        <section ref={guidelinesRef} className="w-full mb-32">
+          <div className="section-header text-center mb-20">
+            <p className="text-xs tracking-[0.6em] uppercase text-primary/80 mb-4 font-normal">
               Nuestro Protocolo
             </p>
-            <p className="text-2xl md:text-3xl font-light italic text-foreground tracking-wide">
+            <p className="text-3xl md:text-4xl font-light italic text-foreground tracking-wide">
               Antes de su Visita
             </p>
           </div>
@@ -110,21 +220,21 @@ const FAQ = () => {
             {guidelines.map((item, index) => (
               <div
                 key={index}
-                className="group grid grid-cols-[60px_1fr] md:grid-cols-[80px_1fr] gap-4 md:gap-8 py-10 border-t border-primary/10 last:border-b last:border-primary/10"
+                className="guideline-item group grid grid-cols-[60px_1fr] md:grid-cols-[80px_1fr] gap-4 md:gap-8 py-12 border-t border-primary/15 last:border-b last:border-primary/15"
               >
                 <div className="flex justify-end pt-1">
-                  <span className="text-2xl md:text-3xl font-light italic text-primary/20 group-hover:text-primary/40 transition-colors duration-700">
+                  <span className="text-2xl md:text-3xl font-light italic text-primary/40 group-hover:text-primary transition-colors duration-700">
                     {item.number}
                   </span>
                 </div>
                 <div>
-                  <p className="text-[10px] tracking-[0.4em] uppercase text-primary/40 mb-2">
+                  <p className="text-xs tracking-[0.4em] uppercase text-primary/70 mb-3 font-normal">
                     {item.subtitle}
                   </p>
-                  <h3 className="text-xl md:text-2xl font-light italic text-foreground mb-4 tracking-wide">
+                  <h3 className="text-2xl md:text-3xl font-light italic text-foreground mb-5 tracking-wide">
                     {item.title}
                   </h3>
-                  <p className="text-sm md:text-base font-light leading-[2] text-muted-foreground max-w-xl">
+                  <p className="text-base md:text-lg font-normal leading-[1.8] text-foreground/75 max-w-xl">
                     {item.description}
                   </p>
                   {item.cta && (
@@ -132,10 +242,10 @@ const FAQ = () => {
                       href={item.cta.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-3 mt-6 px-6 py-2.5 border border-primary/20 text-[10px] tracking-[0.4em] uppercase text-primary/60 hover:text-primary hover:border-primary/40 transition-all duration-700 rounded-none"
+                      className="inline-flex items-center gap-3 mt-8 px-7 py-3 border border-primary/40 text-xs tracking-[0.4em] uppercase text-primary hover:text-primary-foreground hover:bg-primary hover:border-primary transition-all duration-700 rounded-none"
                     >
                       {item.cta.label}
-                      <span className="text-xs">→</span>
+                      <span className="text-sm">→</span>
                     </a>
                   )}
                 </div>
@@ -145,19 +255,19 @@ const FAQ = () => {
         </section>
 
         {/* Ornamental divider */}
-        <div className="flex items-center gap-4 mb-32 animate-fade-in-delay-2">
-          <span className="w-8 h-px bg-primary/15" />
-          <span className="text-primary/20 text-lg">✦</span>
-          <span className="w-8 h-px bg-primary/15" />
+        <div className="flex items-center gap-4 mb-32">
+          <span className="w-8 h-px bg-primary/25" />
+          <span className="text-primary/40 text-lg">✦</span>
+          <span className="w-8 h-px bg-primary/25" />
         </div>
 
         {/* FAQ Section */}
-        <section className="w-full mb-32 animate-fade-in-delay-3">
-          <div className="text-center mb-20">
-            <p className="text-[10px] tracking-[0.6em] uppercase text-primary/50 mb-3">
+        <section ref={faqRef} className="w-full mb-32">
+          <div className="section-header text-center mb-20">
+            <p className="text-xs tracking-[0.6em] uppercase text-primary/80 mb-4 font-normal">
               Información
             </p>
-            <p className="text-2xl md:text-3xl font-light italic text-foreground tracking-wide">
+            <p className="text-3xl md:text-4xl font-light italic text-foreground tracking-wide">
               Preguntas Frecuentes
             </p>
           </div>
@@ -166,28 +276,33 @@ const FAQ = () => {
             {faqs.map((faq, index) => {
               const isOpen = openIndex === index;
               return (
-                <div key={index} className="border-t border-primary/10 last:border-b last:border-primary/10">
+                <div
+                  key={index}
+                  className="faq-item border-t border-primary/15 last:border-b last:border-primary/15"
+                >
                   <button
-                    onClick={() => setOpenIndex(isOpen ? null : index)}
+                    onClick={() => toggleFaq(index)}
                     className="w-full flex items-center justify-between py-8 text-left group"
                   >
-                    <span className="text-base md:text-lg font-light italic tracking-wide text-muted-foreground group-hover:text-foreground transition-colors duration-700">
+                    <span className="text-lg md:text-xl font-light italic tracking-wide text-foreground/85 group-hover:text-primary transition-colors duration-500">
                       {faq.question}
                     </span>
                     <ChevronDown
-                      className={`w-4 h-4 text-primary/30 transition-transform duration-700 flex-shrink-0 ml-8 ${
+                      className={`w-5 h-5 text-primary/60 transition-transform duration-500 flex-shrink-0 ml-8 ${
                         isOpen ? "rotate-180" : ""
                       }`}
                     />
                   </button>
                   <div
-                    className={`overflow-hidden transition-all duration-700 ease-in-out ${
-                      isOpen ? "max-h-48 pb-8" : "max-h-0"
+                    className={`grid transition-all duration-700 ease-in-out ${
+                      isOpen ? "grid-rows-[1fr] opacity-100 pb-8" : "grid-rows-[0fr] opacity-0"
                     }`}
                   >
-                    <p className="text-sm md:text-base font-light leading-[2] text-muted-foreground/70 pl-0 pr-12">
-                      {faq.answer}
-                    </p>
+                    <div className="overflow-hidden">
+                      <p className="text-base md:text-lg font-normal leading-[1.8] text-foreground/70 pl-0 pr-12">
+                        {faq.answer}
+                      </p>
+                    </div>
                   </div>
                 </div>
               );
@@ -199,11 +314,11 @@ const FAQ = () => {
       {/* Footer */}
       <footer className="relative z-10 text-center py-16">
         <div className="flex items-center justify-center gap-4 mb-4">
-          <span className="w-8 h-px bg-primary/10" />
-          <span className="text-primary/15 text-xs">✦</span>
-          <span className="w-8 h-px bg-primary/10" />
+          <span className="w-8 h-px bg-primary/20" />
+          <span className="text-primary/30 text-xs">✦</span>
+          <span className="w-8 h-px bg-primary/20" />
         </div>
-        <p className="text-[10px] tracking-[0.4em] text-muted-foreground/30 italic">
+        <p className="text-xs tracking-[0.4em] text-foreground/50 italic">
           © 2025 Rivalo Macasé — Todos los derechos reservados
         </p>
       </footer>
